@@ -1,8 +1,8 @@
 import Editor from './editor.js';
 
-Vue.component('editor', Editor);
+const Upload = {
+    name: 'upload-modal',
 
-Vue.component('upload-modal', {
     props: ['value'],
 
     data() {
@@ -41,10 +41,9 @@ Vue.component('upload-modal', {
                 this.value.meta.format = subObj.ext;
                 this.value.meta.timestamp = subObj.timestamp;
                 this.value.parsed = subObj.parsed;
-                console.log(value.meta.timestamp);
 
             } catch (ex) {
-                console.log(ex.message || ex);
+                console.error(ex);
             }
         }
     },
@@ -56,7 +55,7 @@ Vue.component('upload-modal', {
         <input type="submit" value="Submit" :disabled="submitDisabled" @click="onSubmit" />
     </div>
     `,
-});
+};
 
 
 const App = {
@@ -75,6 +74,11 @@ const App = {
         }
     },
 
+    components: {
+        'upload-modal': Upload,
+        'editor': Editor
+    },
+
     template: `
     <div id="container">
         <upload-modal v-if="subs.parsed === undefined" v-model="subs" />
@@ -87,7 +91,7 @@ const App = {
 new Vue({
     el: '#app',
     components: {
-        App, Editor
+        App
     },
     template: '<app />'
 });
