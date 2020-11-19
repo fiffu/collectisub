@@ -1,0 +1,21 @@
+{
+  "name": "collectisub",
+  "version": "0.0.1",
+  "description": "Collective subtitling",
+  "main": "index.js",
+  "scripts": {
+    "live": "nodemon index.js",
+    "serve": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fiffu",
+  "license": "ISC",
+  "dependencies": {
+    "ass-parser": "^0.2.0",
+    "express": "^4.17.1",
+    "md5": "^2.3.0",
+    "multer": "^1.4.2",
+    "vue": "^2.6.12",
+    "vue-router": "^3.4.9"
+  }
+}
