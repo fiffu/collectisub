@@ -6,16 +6,16 @@
     4. translators "translate" their share of sentences
     5. collate, export to srt/ass
 
-collectisub.herokuapp.com
+WIP: https://collectisub.herokuapp.com
 
 
-# Install
+## Install
 
     npm install
     node index.js
     npm run live   // auto-reloads Node for dev
 
-# Deploy
+## Deploy
 
     heroku create
     heroku git:remote
