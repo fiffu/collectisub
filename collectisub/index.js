@@ -9,7 +9,7 @@ const PARSERS = {
 const DATABASE = {};
 
 /**
- * @param {File} fileObj 
+ * @param {File} fileObj
  */
 function parse(buffer, ext) {
     // can fetch a hash from the file
@@ -30,7 +30,8 @@ function parse(buffer, ext) {
 
 function save(subid, parsed, ext) {
     DATABASE[subid] = {
-        subid, parsed, ext
+        subid, parsed, ext,
+        timestamp: Date.now(),
     }
 }
 

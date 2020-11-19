@@ -49,8 +49,7 @@ express()
     .post('/submit', mul.single('subFile'), handleSubmit)
 
     .get('/sub/:id', (req, res) => {
-        const subid = req.params.id;
-        const data = collectisub.load(subid);
+        const data = collectisub.load(req.params.id);
         return res.json(data);
     })
 

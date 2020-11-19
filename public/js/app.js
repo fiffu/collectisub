@@ -1,57 +1,61 @@
-const SUBTITLE_FILE = {};
+import Editor from './editor.js';
 
-Vue.component('sub-line', {
-    props: ['item'],
-    template: `
-    <span>
-        <span class="product">{{item.product}}</span>
-        <span class="quantity"><input type="number" v-model.number="item.quantity"></span>
-        <span class="cost">{{item.cost * item.quantity}}</span>
-    </span>
-    `
-});
-
+Vue.component('editor', Editor);
 
 Vue.component('upload-modal', {
-    props: ['file', 'canSubmit'],
+    props: ['value'],
+
     data() {
         return {
-            cannotSubmit: true,
+            fileSelected: false,
         }
     },
-    template: `
-    <div>
-        <input type="file" id="sub-file" @change="onChange" />
-        <input type="submit" value="Submit" :disabled="cannotSubmit" @click="onSubmit" />
-    </div>
-    `,
+
+    computed: {
+        submitDisabled() {
+            return !this.fileSelected;  // some validation here
+        }
+    },
+
     methods: {
         onChange(evt) {
-            const file = evt.target.files[0];
-            this.file = file;
-            this.cannotSubmit = file ? false : true;
+            this.value.file = evt.target.files[0];
+            this.fileSelected = this.value.file ? true : false;
         },
+
         async onSubmit() {
-            console.log('bar');
-            if (!this.file) return;
+            if (!this.value.file) return;
 
             const form = new FormData();
-            form.append('subFile', this.file);
+            form.append('subFile', this.value.file);
 
             try {
-                const res = await fetch('/submit', {method: 'POST', body: form});
-                const data = await res.json();
-                const subid = data['subid'];
+                const json = await fetch('/submit', {method: 'POST', body: form})
+                    .then(r => r.json());
 
+                const subid = json['subid'];
                 const subObj = await fetch(`/sub/${subid}`, {method: 'GET'})
                     .then(res => res.json());
-                console.log(subObj);
-                
+
+                this.value.meta.id = subObj.subid;
+                this.value.meta.format = subObj.ext;
+                this.value.meta.timestamp = subObj.timestamp;
+                this.value.parsed = subObj.parsed;
+                console.log(value.meta.timestamp);
+
             } catch (ex) {
                 console.log(ex.message || ex);
             }
         }
     },
+
+
+    template: `
+    <div class="upload">
+        <input type="file" id="sub-file" @change="onChange" />
+        <input type="submit" value="Submit" :disabled="submitDisabled" @click="onSubmit" />
+    </div>
+    `,
 });
 
 
@@ -59,20 +63,23 @@ const App = {
     name: 'app',
     data() {
         return {
-            sublines: [],
+            subs: {
+                file: undefined,
+                meta: {
+                    id: undefined,
+                    format: undefined,
+                    timestamp: undefined,
+                },
+                parsed: undefined,
+            }
         }
     },
 
     template: `
     <div id="container">
-        <upload-modal />
-        <!--
-        <ol id="list">
-            <li v-for="item in cart">
-                <list-item :item="item" />
-            </li>
-        </ol>
-        -->
+        <upload-modal v-if="subs.parsed === undefined" v-model="subs" />
+
+        <editor v-else v-model="subs" />
     </div>
     `
 }
@@ -80,7 +87,7 @@ const App = {
 new Vue({
     el: '#app',
     components: {
-        App
+        App, Editor
     },
     template: '<app />'
 });
