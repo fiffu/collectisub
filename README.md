@@ -1,10 +1,11 @@
 # collectisub
 
-    1. grab subs
-    2. extract all M sentences, dump into database
-    3. randomly allocate M/N sentences to each of N "translators"
-    4. translators "translate" their share of sentences
-    5. collate, export to srt/ass
+    [x] grab subs
+    [x] extract all M sentences
+    [ ] dump into database
+    [ ] randomly allocate M/N sentences to each of N "translators"
+    [ ] translators "translate" their share of sentences
+    [ ] collate, export to srt/ass
 
 WIP: https://collectisub.herokuapp.com
 
