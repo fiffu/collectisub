@@ -3,9 +3,7 @@ const md5 = require('md5');
 const db = require('./database');
 const { getExtension } = require('./util/index');
 
-const PARSERS = {
-    ass: require('./ass').parser,
-}
+const parsers = require('./parsers/index');
 
 
 function parse(buffer, ext) {
@@ -13,7 +11,7 @@ function parse(buffer, ext) {
     // returning uuid now just for placeholder
     const subid = md5(buffer);
     if (!db.has(subid)) {
-        const parseFunc = PARSERS[ext];
+        const parseFunc = parsers[ext];
         if (!parseFunc)
             throw new Error(`Unsupported file format: ${ext}`);
 
