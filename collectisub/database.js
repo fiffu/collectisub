@@ -2,16 +2,16 @@ const DATABASE = new Map();
 
 
 module.exports = {
-    get(subid, fallback=undefined) {
-        return DATABASE[subid] || fallback;
+    get(id, fallback=undefined) {
+        return DATABASE[id] || fallback;
     },
 
-    set(subid, values) {
+    set(id, values) {
         if (!values.timestamp) values.timestamp = Date.now();
-        DATABASE[subid] = values;
+        DATABASE[id] = values;
     },
 
-    has(subid) {
-        return this.get(subid) ? true : false;
+    has(id) {
+        return this.get(id) ? true : false;
     }
 }

@@ -1,24 +1,17 @@
 const md5 = require('md5');
 
 const db = require('./database');
+const project = require('./project');
 const { getExtension } = require('./util/index');
 
-const parsers = require('./parsers/index');
 
-
-function parse(buffer, ext) {
-    // can fetch a hash from the file
-    // returning uuid now just for placeholder
-    const subid = md5(buffer);
-    if (!db.has(subid)) {
-        const parseFunc = parsers[ext];
-        if (!parseFunc)
-            throw new Error(`Unsupported file format: ${ext}`);
-
-        const parsed = parseFunc(buffer);
-        db.set(subid, { parsed, ext });
+function findProject(buffer, filename, ext) {
+    const projId = md5(buffer);
+    if (!db.has(projId)) {
+        const newProject = project.create(projId, filename, ext, buffer);
+        db.set(projId, newProject);
     }
-    return subid;
+    return projId;
 }
 
 async function fetchProject(file) {
@@ -27,8 +20,8 @@ async function fetchProject(file) {
 
     try {
         const ext = getExtension(file.originalname);
-        const subid = parse(file.buffer, ext);
-        return subid;
+        const projId = findProject(file.buffer, file.name, ext);
+        return projId;
     } catch (e) {
         console.error(e);
         throw new Error('Internal Server Error');
@@ -48,28 +41,28 @@ function setRoutes(app, multer) {
             return res.status(403).send({message: 'no file uploaded'});
         
         try {
-            const subid = await fetchProject(file);
-            return res.send({ subid });
+            const projId = await fetchProject(file);
+            return res.send({ projId });
         } catch (ex) {
             return res.status(500).send(ex.message || ex);
         }
     });
 
-    app.get('/projects/:subid', (req, res) => {
-        const subid = req.params.subid;
-        const data = db.get(subid);
+    app.get('/projects/:projId', (req, res) => {
+        const projId = req.params.projId;
+        const data = db.get(projId);
         if (!data)
             return res.status(404).send('Not Found');
         return res.json(data);
     });
 
-    app.post('/projects/:subid', (req, res) => {
+    app.post('/projects/:projId', (req, res) => {
         const { parsed, ext } = req.body;
-        db.set(subid, { parsed, ext });
+        db.set(projId, { parsed, ext });
     });
 
-    app.get('/:subid/:userid');
-    app.post('/:subid/:userid');
+    app.get('/:projId/:userId');
+    app.post('/:projId/:userId');
 };
 
 

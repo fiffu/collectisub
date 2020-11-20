@@ -33,11 +33,11 @@ const Upload = {
                 const json = await fetch('/projects', {method: 'POST', body: form})
                     .then(r => r.json());
 
-                const subid = json['subid'];
-                const subObj = await fetch(`/projects/${subid}`, {method: 'GET'})
+                const projId = json['projId'];
+                const subObj = await fetch(`/projects/${projId}`, {method: 'GET'})
                     .then(res => res.json());
 
-                this.value.meta.id = subObj.subid;
+                this.value.meta.id = subObj.projId;
                 this.value.meta.format = subObj.ext;
                 this.value.meta.timestamp = subObj.timestamp;
                 this.value.parsed = subObj.parsed;
