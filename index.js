@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 
-const { getExtension } = require('./util/index');
+const { getExtension } = require('./collectisub/util/index');
 const collectisub = require('./collectisub/index');
 
 
@@ -18,41 +18,13 @@ const mul = multer({
 });
 
 
-async function handleSubmit(req, res) {
-    const file = req.file;
-    if (!file) {
-        return res.send({
-            status: 403,
-            message: 'no file uploaded'
-        });
-    }
+const app = express();
 
-    try {
-        const ext = getExtension(file.originalname);
-        const subid = collectisub.parse(file.buffer, ext);
-        return res.json({
-            subid
-        });
-    } catch (e) {
-        console.error(e);
-        res.status(500);
-        return res.send({
-            message: e.message || 'Internal Server Error'
-        })
-    }
-}
+app.use(express.static('public'));
+app.use(express.json());
 
+collectisub.setRoutes(app, mul);
 
-express()
-    .use(express.static('public'))
-
-    .post('/submit', mul.single('subFile'), handleSubmit)
-
-    .get('/sub/:id', (req, res) => {
-        const data = collectisub.load(req.params.id);
-        return res.json(data);
-    })
-
-    .listen(PORT, () => {
-        console.log(`Server is running on port http://localhost:${PORT}`);
-    });
+app.listen(PORT, () => {
+    console.log(`Server is running on port http://localhost:${PORT}`);
+});

@@ -30,11 +30,11 @@ const Upload = {
             form.append('subFile', this.value.file);
 
             try {
-                const json = await fetch('/submit', {method: 'POST', body: form})
+                const json = await fetch('/projects', {method: 'POST', body: form})
                     .then(r => r.json());
 
                 const subid = json['subid'];
-                const subObj = await fetch(`/sub/${subid}`, {method: 'GET'})
+                const subObj = await fetch(`/projects/${subid}`, {method: 'GET'})
                     .then(res => res.json());
 
                 this.value.meta.id = subObj.subid;
