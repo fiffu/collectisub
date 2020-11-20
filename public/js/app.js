@@ -117,7 +117,7 @@ const App = {
     template: `
     <div id="container">
         <upload-modal v-model="project" :acceptedFormats="acceptedFormats" />
-
+        <hr>
         <editor v-if="project.parsed !== undefined" v-model="project" />
     </div>
     `

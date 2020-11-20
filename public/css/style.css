@@ -5,3 +5,12 @@
 #container {
     margin: 20px;
 }
+
+.editor > h2, #proj-id {
+    display: inline;
+}
+
+span#proj-id {
+    font-style: italic;
+    font-size: 0.9rem;
+}
