@@ -19,8 +19,9 @@ async function fetchProject(file) {
         throw new Error('no file uploaded');
 
     try {
-        const ext = getExtension(file.originalname);
-        const projId = findProject(file.buffer, file.name, ext);
+        const filename = file.originalname;
+        const ext = getExtension(filename);
+        const projId = findProject(file.buffer, filename, ext);
         return projId;
     } catch (e) {
         console.error(e);

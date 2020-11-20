@@ -1,9 +1,10 @@
+import acceptedFormats from './accept-formats.js';
 import Editor from './editor.js';
 
 const Upload = {
     name: 'upload-modal',
 
-    props: ['value'],
+    props: ['value', 'acceptedFormats'],
 
     data() {
         return {
@@ -14,13 +15,20 @@ const Upload = {
     computed: {
         submitDisabled() {
             return !this.fileSelected;  // some validation here
+        },
+        accepts() {
+            return this.acceptedFormats
+                .map(f => `.${f}`)  // prepend .
+                .join(',');
         }
     },
 
     methods: {
         onChange(evt) {
-            this.value.file = evt.target.files[0];
-            this.fileSelected = this.value.file ? true : false;
+            const file = evt.target.files[0];
+            this.value.file = file;
+            this.value.meta.filename = file.name;
+            this.fileSelected = file ? true : false;
         },
 
         async onSubmit() {
@@ -34,13 +42,18 @@ const Upload = {
                     .then(r => r.json());
 
                 const projId = json['projId'];
-                const subObj = await fetch(`/projects/${projId}`, {method: 'GET'})
+                const proj = await fetch(`/projects/${projId}`, {method: 'GET'})
                     .then(res => res.json());
 
-                this.value.meta.id = subObj.projId;
-                this.value.meta.format = subObj.ext;
-                this.value.meta.timestamp = subObj.timestamp;
-                this.value.parsed = subObj.parsed;
+                this.value.meta = {
+                    id: proj.projId,
+                    filename: proj.filename,
+                    format: proj.ext,
+                    timestamp: proj.timestamp,
+                }
+                this.value.parsed = proj.parsed;
+
+                this.fileSelected = false;
 
             } catch (ex) {
                 console.error(ex);
@@ -50,10 +63,30 @@ const Upload = {
 
 
     template: `
-    <div class="upload">
-        <input type="file" id="sub-file" @change="onChange" />
-        <input type="submit" value="Submit" :disabled="submitDisabled" @click="onSubmit" />
-    </div>
+    <div class="row"><div class="col-4">
+        <div class="input-group">
+
+            <div class="custom-file">
+                <input 
+                    type="file" id="sub-file"
+                    class="custom-file-input" 
+                    :accept="accepts"
+                    @change="onChange" 
+                    >
+                <label class="custom-file-label" for="customFile">
+                    {{ this.value.meta.filename || 'Choose file' }}
+                </label>
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                :disabled="submitDisabled" 
+                @click="onSubmit">
+                Submit
+            </button>
+        </div>
+    </div></div>
     `,
 };
 
@@ -62,15 +95,17 @@ const App = {
     name: 'app',
     data() {
         return {
-            subs: {
+            project: {
                 file: undefined,
                 meta: {
                     id: undefined,
+                    filename: undefined,
                     format: undefined,
                     timestamp: undefined,
                 },
                 parsed: undefined,
-            }
+            },
+            acceptedFormats: acceptedFormats,
         }
     },
 
@@ -81,9 +116,9 @@ const App = {
 
     template: `
     <div id="container">
-        <upload-modal v-if="subs.parsed === undefined" v-model="subs" />
+        <upload-modal v-model="project" :acceptedFormats="acceptedFormats" />
 
-        <editor v-else v-model="subs" />
+        <editor v-if="project.parsed !== undefined" v-model="project" />
     </div>
     `
 }

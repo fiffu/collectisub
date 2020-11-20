@@ -35,7 +35,8 @@ const Editor = {
 
     template: `
     <div class="editor">
-        <h2 class="subs-name">{{ value.meta.id }}</h2>
+        <h2 class="proj-name">{{ value.meta.filename }}</h2>
+        <span class="proj-id">{{ value.meta.id }}</span>
         <table class="table table-striped subs-lines">
             <thead>
                 <tr>
@@ -46,11 +47,6 @@ const Editor = {
                 <tr v-for="line in lines">
                     <td v-for="(rw, col) in columns" :class="{'col-8': rw === 'w'}"">
                         <span v-if="rw === 'r'">{{ line[col] }}</span>
-                        <!--
-                        <textarea v-else v-model="line.Text">
-                            {{ line.Text }}
-                        </textarea>
-                        -->
                         <input type="text" v-else v-model="line.Text" style="width: 100%" />
                     </td>
                 </tr>
