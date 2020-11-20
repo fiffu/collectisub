@@ -50,7 +50,7 @@ function setRoutes(app, multer) {
     });
 
     app.get('/projects/:projId', (req, res) => {
-        const projId = req.params.projId;
+        const { projId } = req.params;
         const data = db.get(projId);
         if (!data)
             return res.status(404).send('Not Found');
@@ -62,8 +62,16 @@ function setRoutes(app, multer) {
         db.set(projId, { parsed, ext });
     });
 
-    app.get('/:projId/:userId');
-    app.post('/:projId/:userId');
+    app.get('/projects/:projId/:userId', (req, res) => {
+        const { projId, userId } = req.params;
+        res.status(503).send('Service Unavailable');
+    });
+
+    app.post('/projects/:projId/:userId', (req, res) => {
+        const { projId, userId } = req.params;
+        const body = req.body;
+        res.status(503).send('Service Unavailable');
+    });
 };
 
 

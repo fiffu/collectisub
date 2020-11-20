@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 8080;
 
 const ACCEPT_EXTENSIONS = ['ass'];
 
-// todo add filefilter  https://github.com/expressjs/multer#filefilter
 const mul = multer({
     filefilter(req, file, callback) {
         const ext = getExtension(file.originalname);
