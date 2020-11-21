@@ -46,9 +46,9 @@ const Upload = {
                     .then(res => res.json());
 
                 this.value.meta = {
-                    id: proj.projId,
+                    projId: proj.projId,
                     filename: proj.filename,
-                    format: proj.ext,
+                    format: proj.format,
                     timestamp: proj.timestamp,
                 }
                 this.value.parsed = proj.parsed;
@@ -67,11 +67,11 @@ const Upload = {
         <div class="input-group">
 
             <div class="custom-file">
-                <input 
+                <input
                     type="file" id="sub-file"
-                    class="custom-file-input" 
+                    class="custom-file-input"
                     :accept="accepts"
-                    @change="onChange" 
+                    @change="onChange"
                     >
                 <label class="custom-file-label" for="customFile">
                     {{ this.value.meta.filename || 'Choose file' }}
@@ -81,7 +81,7 @@ const Upload = {
             <button
                 type="button"
                 class="btn btn-primary"
-                :disabled="submitDisabled" 
+                :disabled="submitDisabled"
                 @click="onSubmit">
                 Submit
             </button>
@@ -98,7 +98,7 @@ const App = {
             project: {
                 file: undefined,
                 meta: {
-                    id: undefined,
+                    projId: undefined,
                     filename: undefined,
                     format: undefined,
                     timestamp: undefined,

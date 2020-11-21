@@ -36,7 +36,7 @@ const Editor = {
     template: `
     <div class="editor">
         <h2 class="proj-name">{{ value.meta.filename }}</h2>
-        <span class="proj-id">{{ value.meta.id }}</span>
+        <span class="proj-id">{{ value.meta.projId }}</span>
         <table class="table table-striped subs-lines">
             <thead>
                 <tr>
