@@ -1,27 +1,16 @@
-const md5 = require('md5');
-
-const db = require('./database');
+const db = require('./db/index');
 const project = require('./project');
 const { getExtension } = require('./util/index');
 
 
-function findProject(buffer, filename, ext) {
-    const projId = md5(buffer);
-    if (!db.has(projId)) {
-        const newProject = project.create(projId, filename, ext, buffer);
-        db.set(projId, newProject);
-    }
-    return projId;
-}
-
-async function fetchProject(file) {
+async function submitFile(file) {
     if (!file)
         throw new Error('no file uploaded');
 
     try {
         const filename = file.originalname;
         const ext = getExtension(filename);
-        const projId = findProject(file.buffer, filename, ext);
+        const projId = await project.submitFile(file.buffer, filename, ext);
         return projId;
     } catch (e) {
         console.error(e);
@@ -40,21 +29,28 @@ function setRoutes(app, multer) {
         const file = req.file;
         if (!file)
             return res.status(403).send({message: 'no file uploaded'});
-        
+
         try {
-            const projId = await fetchProject(file);
+            const projId = await submitFile(file);
             return res.send({ projId });
         } catch (ex) {
             return res.status(500).send(ex.message || ex);
         }
     });
 
-    app.get('/projects/:projId', (req, res) => {
+    app.get('/projects/:projId', async (req, res) => {
         const { projId } = req.params;
-        const data = db.get(projId);
-        if (!data)
-            return res.status(404).send('Not Found');
-        return res.json(data);
+        try {
+            const data = await project.getData(projId);
+            const meta = await project.getMeta(projId);
+            Object.assign(data, meta);
+            return res.json(data);
+        } catch (ex) {
+            if (ex instanceof project.NotFoundError)
+                return res.status(404).send('Not Found');
+            else
+                return res.status(500).send('Internal Server Error');
+        }
     });
 
     app.post('/projects/:projId', (req, res) => {
