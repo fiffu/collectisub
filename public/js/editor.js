@@ -43,6 +43,7 @@ const Editor = {
                     <th scope="col" v-for="(rw, col) in columns">{{ col }}</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr v-for="line in lines">
                     <td v-for="(rw, col) in columns" :class="{'col-8': rw === 'w'}"">

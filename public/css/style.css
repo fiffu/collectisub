@@ -6,11 +6,11 @@
     margin: 20px;
 }
 
-.editor > h2, #proj-id {
+.editor > h2, .proj-id {
     display: inline;
 }
 
-span#proj-id {
+.editor > .proj-id {
     font-style: italic;
     font-size: 0.9rem;
 }
