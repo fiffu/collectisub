@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS projects_meta;
+DROP TABLE IF EXISTS projects_meta CASCADE;
 CREATE TABLE "projects_meta" (
     projId     text primary key,
     filename   text not null,
