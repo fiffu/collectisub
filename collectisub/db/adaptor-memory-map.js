@@ -16,36 +16,36 @@ class InMemoryDao {
         tables.forEach(table => this.db[table] = new Map());
     }
 
-    async createProject(projId, filename, format, parsed) {
+    async createProject(projid, filename, format, parsed) {
         const timestamp = Date.now();
-        this.db.projects_data[projId]         = { projId, timestamp, parsed };
-        this.db.projects_originaldata[projId] = { projId, timestamp, parsed };
-        this.db.projects_meta[projId]         = { projId, filename, format };
+        this.db.projects_data[projid]         = { projid, timestamp, parsed };
+        this.db.projects_originaldata[projid] = { projid, timestamp, parsed };
+        this.db.projects_meta[projid]         = { projid, filename, format };
     }
 
     /**
      * @returns {ProjectMetaRecord}
      */
-    async getProjectMeta(projId) {
-        return this.db.projects_meta[projId];
+    async getProjectMeta(projid) {
+        return this.db.projects_meta[projid];
     }
 
-    async setProjectMeta(projId, values) {
+    async setProjectMeta(projid, values) {
         delete values.timestamp;
-        Object.assign(this.db.projects_meta[projId], values);
+        Object.assign(this.db.projects_meta[projid], values);
     }
 
 
     /**
      * @returns {ProjectDataRecord}
      */
-    async getProject(projId) {
-        return this.db.projects_data[projId];
+    async getProject(projid) {
+        return this.db.projects_data[projid];
     }
 
-    async setProject(projId, parsed) {
+    async setProject(projid, parsed) {
         const timestamp = Date.now();
-        this.db.projects_data[projId] = { projId, timestamp, parsed };
+        this.db.projects_data[projid] = { projid, timestamp, parsed };
         return timestamp;
     }
 
@@ -67,12 +67,12 @@ module.exports = InMemoryDao;
 // TYPEDEFS ////////////////////////////////////////////////////
 /**
  * @typedef ProjectMetaRecord
- * @property {string} projId - md5 hash of origin file
+ * @property {string} projid - md5 hash of origin file
  * @property {string} filename - name of origin file
  * @property {string} format - subtitle format
  *//**
  * @typedef ProjectDataRecord
- * @property {string} projId - md5 hash of origin file
+ * @property {string} projid - md5 hash of origin file
  * @property {Date} timestamp - last modified timestamp
  * @property {object} parsed - file parse tree
  *//**

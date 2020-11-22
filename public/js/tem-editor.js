@@ -35,13 +35,13 @@ const Editor = {
         async pushUpdate() {
             try {
                 this.updating = true;
-                const projId = this.value.meta.projId;
+                const projid = this.value.meta.projid;
                 const params = {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(this.value.parsed),
                 }
-                await fetch(`/projects/${projId}`, params);
+                await fetch(`/projects/${projid}`, params);
                 this.updating = false;
 
             } catch (ex) {
@@ -58,7 +58,7 @@ const Editor = {
     template: `
     <div class="editor">
         <h2 class="proj-name">{{ value.meta.filename }}</h2>
-        <span class="proj-id">{{ value.meta.projId }}</span>
+        <span class="proj-id">{{ value.meta.projid }}</span>
         <span id="updating" v-if="updating" style="margin-left: 3px;">Updating…</span>
 
         <sub-line-ass v-model="value" @update-subs="pushUpdate"/>

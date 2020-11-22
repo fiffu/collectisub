@@ -90,28 +90,30 @@ class PostgresDao {
 
     async _update(table, values, conditions) {
         const query = buildUpdateQuery(table, values, conditions);
+        console.log(query.sql);
+        console.log(query.params);
         if (query)
             await this.db.query(query.sql, query.params);
     }
 
 
-    async createProject(projId, filename, format, parsed) {
+    async createProject(projid, filename, format, parsed) {
         parsed = JSON.stringify(parsed);
         const client = await this.db.connect();
         try {
             const timestamp = Date.now();
             await client.query('BEGIN');
             await client.query(
-                `INSERT INTO projects_meta(projId, filename, format) VALUES ($1, $2, $3)`,
-                [projId, filename, format]
+                `INSERT INTO projects_meta(projid, filename, format) VALUES ($1, $2, $3)`,
+                [projid, filename, format]
             )
             await client.query(
-                `INSERT INTO projects_data(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
-                [projId, timestamp, parsed]
+                `INSERT INTO projects_data(projid, timestamp, parsed) VALUES ($1, $2, $3)`,
+                [projid, timestamp, parsed]
             );
             await client.query(
-                `INSERT INTO projects_originaldata(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
-                [projId, timestamp, parsed]
+                `INSERT INTO projects_originaldata(projid, timestamp, parsed) VALUES ($1, $2, $3)`,
+                [projid, timestamp, parsed]
             );
             await client.query('COMMIT');
 
@@ -129,26 +131,25 @@ class PostgresDao {
     /**
      * @returns {ProjectMetaRecord}
      */
-    async getProjectMeta(projId) {
-        return await this._getFromWhere('projects_meta', { projId });
+    async getProjectMeta(projid) {
+        return await this._getFromWhere('projects_meta', { projid });
     }
 
-    async setProjectMeta(projId, values) {
-        return await this._update('projects_meta', values, { projId });
+    async setProjectMeta(projid, values) {
+        return await this._update('projects_meta', values, { projid });
     }
 
 
     /**
      * @returns {ProjectDataRecord}
      */
-    async getProject(projId) {
-        return await this._getFromWhere('projects_data', { projId });
+    async getProject(projid) {
+        return await this._getFromWhere('projects_data', { projid });
     }
 
-    async setProject(projId, values) {
-        if (values.parsed)
-            values.parsed = JSON.stringify(values.parsed);
-        return await _update('projects_data', values, { projId });
+    async setProject(projid, parsed) {
+        const values = { parsed: JSON.stringify(parsed), timestamp: Date.now() };
+        return await this._update('projects_data', values, { projid });
     }
 
 
@@ -160,7 +161,7 @@ class PostgresDao {
     }
 
     async setUser(username, values) {
-        return await _update('projects_users', values, { username });
+        return await this._update('projects_users', values, { username });
     }
 }
 
@@ -169,12 +170,12 @@ module.exports = PostgresDao;
 // TYPEDEFS ////////////////////////////////////////////////////
 /**
  * @typedef ProjectMetaRecord
- * @property {string} projId - md5 hash of origin file
+ * @property {string} projid - md5 hash of origin file
  * @property {string} filename - name of origin file
  * @property {string} format - subtitle format
  *//**
  * @typedef ProjectDataRecord
- * @property {string} projId - md5 hash of origin file
+ * @property {string} projid - md5 hash of origin file
  * @property {Date} timestamp - last modified timestamp
  * @property {object} parsed - file parse tree
  *//**

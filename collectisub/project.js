@@ -17,25 +17,25 @@ async function submitFile(buffer, filename, ext) {
     if (!parseFunc)
         throw new Error(`Unsupported file format: ${ext}`);
 
-    const projId = md5(buffer);
-    const exists = await db.getProjectMeta(projId)
+    const projid = md5(buffer);
+    const exists = await db.getProjectMeta(projid)
     if (!exists) {
         const parsed = parseFunc(buffer);
-        await db.createProject(projId, filename, ext, parsed);
+        await db.createProject(projid, filename, ext, parsed);
     }
 
-    return projId;
+    return projid;
 }
 
-async function getMeta(projId) {
-    const proj = db.getProjectMeta(projId);
+async function getMeta(projid) {
+    const proj = db.getProjectMeta(projid);
     if (!proj)
         throw NotFoundError;
     return proj;
 }
 
-async function getData(projId, username=undefined) {
-    const data = await db.getProject(projId);
+async function getData(projid, username=undefined) {
+    const data = await db.getProject(projid);
     if (!data)
         throw NotFoundError;
     if (username) {
@@ -45,9 +45,9 @@ async function getData(projId, username=undefined) {
     return data;
 }
 
-async function setData(projId, parsed) {
-    const timestamp = await db.setProject(projId, parsed);
-    return { projId, timestamp };
+async function setData(projid, parsed) {
+    const timestamp = await db.setProject(projid, parsed);
+    return { projid, timestamp };
 }
 
 module.exports = {

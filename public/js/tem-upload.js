@@ -38,13 +38,13 @@ const Upload = {
                 const json = await fetch('/projects', {method: 'POST', body: form})
                     .then(r => r.json());
 
-                const projId = json['projId'];
-                const proj = await fetch(`/projects/${projId}`, {method: 'GET'})
+                const projid = json['projid'];
+                const proj = await fetch(`/projects/${projid}`, {method: 'GET'})
                     .then(res => res.json());
                 console.log(proj);
 
                 this.value.meta = {
-                    projId: proj.projId,
+                    projid: proj.projid,
                     filename: proj.filename,
                     format: proj.format,
                     timestamp: proj.timestamp,

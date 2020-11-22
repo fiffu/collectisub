@@ -10,7 +10,7 @@ const App = {
             project: {
                 file: undefined,
                 meta: {
-                    projId: undefined,
+                    projid: undefined,
                     filename: undefined,
                     format: undefined,
                     timestamp: undefined,

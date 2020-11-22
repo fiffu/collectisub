@@ -10,8 +10,8 @@ async function submitFile(file) {
     try {
         const filename = file.originalname;
         const ext = getExtension(filename);
-        const projId = await project.submitFile(file.buffer, filename, ext);
-        return projId;
+        const projid = await project.submitFile(file.buffer, filename, ext);
+        return projid;
     } catch (e) {
         console.error(e);
         throw new Error('Internal Server Error');
@@ -31,18 +31,18 @@ function setRoutes(app, multer) {
             return res.status(403).send({message: 'no file uploaded'});
 
         try {
-            const projId = await submitFile(file);
-            return res.send({ projId });
+            const projid = await submitFile(file);
+            return res.send({ projid });
         } catch (ex) {
             return res.status(500).send(ex.message || ex);
         }
     });
 
-    app.get('/projects/:projId', async (req, res) => {
-        const { projId } = req.params;
+    app.get('/projects/:projid', async (req, res) => {
+        const { projid } = req.params;
         try {
-            const data = await project.getData(projId);
-            const meta = await project.getMeta(projId);
+            const data = await project.getData(projid);
+            const meta = await project.getMeta(projid);
             Object.assign(data, meta);
             return res.json(data);
         } catch (ex) {
@@ -53,11 +53,11 @@ function setRoutes(app, multer) {
         }
     });
 
-    app.post('/projects/:projId', async (req, res) => {
-        const projId = req.params.projId;
+    app.post('/projects/:projid', async (req, res) => {
+        const projid = req.params.projid;
         const parsed = req.body;
         try {
-            const { timestamp } = await project.setData(projId, parsed);
+            const { timestamp } = await project.setData(projid, parsed);
             return res.json({ timestamp });
         } catch (ex) {
             console.error(ex);
@@ -65,13 +65,13 @@ function setRoutes(app, multer) {
         }
     });
 
-    app.get('/projects/:projId/:userId', (req, res) => {
-        const { projId, userId } = req.params;
+    app.get('/projects/:projid/:userId', (req, res) => {
+        const { projid, userId } = req.params;
         res.status(503).send('Service Unavailable');
     });
 
-    app.post('/projects/:projId/:userId', (req, res) => {
-        const { projId, userId } = req.params;
+    app.post('/projects/:projid/:userId', (req, res) => {
+        const { projid, userId } = req.params;
         const body = req.body;
         res.status(503).send('Service Unavailable');
     });
