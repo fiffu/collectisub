@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const fs = require('fs');
 
 /**
  * Extracts from `obj` each key in `yields`, yielding `"key=$N"` placeholders for SQL SET.
@@ -55,8 +56,15 @@ class PostgresDao {
 
 
     async init() {
-        const sql = await fs.readFile('./schema.sql');
-        return await this.db.query(sql);
+        fs.readFile(`${__dirname}/schema.sql`, async (err, sql) => {
+            if (err) return console.error(err);
+            try {
+                await this.db.query(sql);
+                console.log('initialized database');
+            } catch (ex) {
+                console.error(ex);
+            }
+        });
     }
 
     async _fetchOneRow(sql, params) {
