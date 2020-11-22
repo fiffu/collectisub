@@ -30,7 +30,7 @@ const App = {
     <div id="container">
         <upload-modal v-model="project" :acceptedFormats="acceptedFormats" />
         <hr>
-        <editor v-if="project.parsed !== undefined" v-model="project" @update-subs="pushUpdate" />
+        <editor v-if="project.parsed !== undefined" v-model="project" />
     </div>
     `
 }
