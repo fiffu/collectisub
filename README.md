@@ -2,7 +2,7 @@
 
     [x] grab subs
     [x] extract all M sentences
-    [ ] dump into database
+    [x] dump into database
     [ ] randomly allocate M/N sentences to each of N "translators"
     [ ] translators "translate" their share of sentences
     [ ] collate, export to srt/ass
