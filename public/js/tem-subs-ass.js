@@ -8,6 +8,7 @@ const SubsAss = {
         lines.forEach((line, idx) => line.idx = idx);  // array idx per Dialogue obj
 
         return {
+            updating: false,
             lines: lines,
             columns: {
                 'Start': 'read',
@@ -30,7 +31,7 @@ const SubsAss = {
                 .map(c => Math.trunc(c * 0.25 + 192))  // scale to 75~100% of rgb
                 .map(c => c.toString(16)).join('');  // back to hexcode
             return `#${colour}`;
-        }
+        },
     },
 
     template: `
@@ -48,7 +49,9 @@ const SubsAss = {
                     <input type="text"
                         v-else v-model="line.Text"
                         style="width: 100%"
-                        class="editable-sub" />
+                        class="editable-sub"
+                        @change="$emit('update-subs')"
+                        />
                 </td>
             </tr>
         </tbody>

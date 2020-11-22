@@ -31,18 +31,8 @@ const Editor = {
     },
 
     methods: {
-
-        calculateColour(str) {
-            const c = str.slice(0, 100) // slice here to prevent OOM from .repeat(6)
-                .split('').map(c => c.charCodeAt())  // array of charcode
-                .reduce((a, b) => a + b * 64).toString(16)  // sub and express as hex
-                .repeat(6).slice(0, 6);  // duplicate to make string of length 6
-
-            const colour = [ c.slice(0, 2), c.slice(2, 4), c.slice(4, 6)]  // [r, g, b]
-                .map(c => Number.parseInt(c, 16))  // back to int
-                .map(c => Math.trunc(c * 0.25 + 192))  // scale to 75~100% of rgb
-                .map(c => c.toString(16)).join('');  // back to hexcode
-            return `#${colour}`;
+        propagate(evt) {
+            this.$emit(evt);
         }
     },
 
@@ -55,7 +45,7 @@ const Editor = {
         <h2 class="proj-name">{{ value.meta.filename }}</h2>
         <span class="proj-id">{{ value.meta.projId }}</span>
 
-        <sub-line-ass v-model="value" />
+        <sub-line-ass v-model="value" @update-subs="propagate('update-subs') "/>
 
         </table>
     </div>

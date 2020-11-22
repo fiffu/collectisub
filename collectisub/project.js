@@ -45,9 +45,15 @@ async function getData(projId, username=undefined) {
     return data;
 }
 
+async function setData(projId, parsed) {
+    const timestamp = await db.setProject(projId, parsed);
+    return { projId, timestamp };
+}
+
 module.exports = {
     submitFile,
     getMeta,
     getData,
+    setData,
     NotFoundError,
 }

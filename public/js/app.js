@@ -26,11 +26,27 @@ const App = {
         'editor': Editor
     },
 
+    methods: {
+        async pushUpdate() {
+            try {
+                const projId = this.project.meta.projId;
+                const params = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.project.parsed),
+                }
+                await fetch(`/projects/${projId}`, params);
+            } catch (ex) {
+                console.error(ex);
+            }
+        },
+    },
+
     template: `
     <div id="container">
         <upload-modal v-model="project" :acceptedFormats="acceptedFormats" />
         <hr>
-        <editor v-if="project.parsed !== undefined" v-model="project" />
+        <editor v-if="project.parsed !== undefined" v-model="project" @update-subs="pushUpdate" />
     </div>
     `
 }

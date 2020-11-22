@@ -41,6 +41,7 @@ const Upload = {
                 const projId = json['projId'];
                 const proj = await fetch(`/projects/${projId}`, {method: 'GET'})
                     .then(res => res.json());
+                console.log(proj);
 
                 this.value.meta = {
                     projId: proj.projId,

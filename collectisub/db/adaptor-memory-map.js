@@ -31,8 +31,8 @@ class InMemoryDao {
     }
 
     async setProjectMeta(projId, values) {
-        if (!values.timestamp) values.timestamp = Date.now();
-        this.db.projects_meta[projId] = values;
+        delete values.timestamp;
+        Object.assign(this.db.projects_meta[projId], values);
     }
 
 
@@ -44,7 +44,9 @@ class InMemoryDao {
     }
 
     async setProject(projId, parsed) {
-        return this.db.projects_data[projId] = parsed;
+        const timestamp = Date.now();
+        this.db.projects_data[projId] = { projId, timestamp, parsed };
+        return timestamp;
     }
 
 
@@ -56,7 +58,7 @@ class InMemoryDao {
     }
 
     async setUser(username, values) {
-        return this.db.users[username] = values;
+        Object.assign(this.db.users[username], values);
     }
 }
 

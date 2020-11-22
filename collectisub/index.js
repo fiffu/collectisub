@@ -53,9 +53,16 @@ function setRoutes(app, multer) {
         }
     });
 
-    app.post('/projects/:projId', (req, res) => {
-        const { parsed, ext } = req.body;
-        db.set(projId, { parsed, ext });
+    app.post('/projects/:projId', async (req, res) => {
+        const projId = req.params.projId;
+        const parsed = req.body;
+        try {
+            const { timestamp } = await project.setData(projId, parsed);
+            return res.json({ timestamp });
+        } catch (ex) {
+            console.error(ex);
+            return res.status(500).send('Internal Server Error');
+        }
     });
 
     app.get('/projects/:projId/:userId', (req, res) => {
