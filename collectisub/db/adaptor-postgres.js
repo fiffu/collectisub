@@ -78,6 +78,7 @@ class PostgresDao {
 
     async _fetchOneRow(sql, params) {
         const res = await this.db.query(sql, params);
+        console.log(res.rows[0]);
         return res.rows[0];
     }
 
