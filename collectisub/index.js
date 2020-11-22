@@ -77,7 +77,7 @@ function setRoutes(app, multer) {
     });
 
     app.get('/init/:secret', async (req, res) => {
-        const secret = process.env.secret;
+        const secret = process.env.SECRET;
         try {
             if (secret && secret === req.params.secret) {
                 await db.init();
