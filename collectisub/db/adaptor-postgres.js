@@ -95,6 +95,7 @@ class PostgresDao {
 
 
     async createProject(projId, filename, format, parsed) {
+        parsed = JSON.stringify(parsed);
         const client = await this.db.connect();
         try {
             const timestamp = Date.now();
@@ -144,6 +145,8 @@ class PostgresDao {
     }
 
     async setProject(projId, values) {
+        if (values.parsed)
+            values.parsed = JSON.stringify(values.parsed);
         return await _update('projects_data', values, { projId });
     }
 
