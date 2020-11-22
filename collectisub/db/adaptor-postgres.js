@@ -67,7 +67,6 @@ class PostgresDao {
 
             try {
                 const sql = res.toString('utf8');
-                console.log(sql);
                 await this.db.query(sql);
                 console.log('Initialized database');
             } catch (ex) {
@@ -78,7 +77,6 @@ class PostgresDao {
 
     async _fetchOneRow(sql, params) {
         const res = await this.db.query(sql, params);
-        console.log(res.rows[0]);
         return res.rows[0];
     }
 
@@ -90,8 +88,6 @@ class PostgresDao {
 
     async _update(table, values, conditions) {
         const query = buildUpdateQuery(table, values, conditions);
-        console.log(query.sql);
-        console.log(query.params);
         if (query)
             await this.db.query(query.sql, query.params);
     }
