@@ -75,6 +75,14 @@ function setRoutes(app, multer) {
         const body = req.body;
         res.status(503).send('Service Unavailable');
     });
+
+    app.get('/init/:secret', async (req, res) => {
+        const secret = process.env.secret;
+        if (secret && secret === req.params.secret)
+            await db.init();
+
+        return res.status(200).send();
+    })
 };
 
 
