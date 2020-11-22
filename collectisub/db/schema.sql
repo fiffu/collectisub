@@ -8,14 +8,14 @@ CREATE TABLE "projects_meta" (
 DROP TABLE IF EXISTS projects_data;
 CREATE TABLE "projects_data" (
     projId     text primary key references projects_meta,
-    timestamp  timestamp not null,
+    timestamp  bigint not null,
     parsed     jsonb
 );
 
 DROP TABLE IF EXISTS projects_originaldata;
 CREATE TABLE "projects_originaldata" (
     projId     text primary key references projects_meta,
-    timestamp  timestamp not null,
+    timestamp  bigint not null,
     parsed     jsonb not null
 );
 
