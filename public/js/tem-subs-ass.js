@@ -8,7 +8,6 @@ const SubsAss = {
         lines.forEach((line, idx) => line.idx = idx);  // array idx per Dialogue obj
 
         return {
-            updating: false,
             lines: lines,
             columns: {
                 'Start': 'read',

@@ -10,11 +10,18 @@
     display: inline;
 }
 
-.editor > .proj-id {
-    font-style: italic;
+.editor > span {
     font-size: 0.9rem;
 }
 
+span.proj-id {
+    font-style: italic;
+}
+
+#updating {
+    padding: 2px 4px;
+    background-color: bisque;
+}
 
 input.editable-sub {
     background-color: rgb(255, 255, 255, 0.4);
