@@ -2,10 +2,10 @@
   "name": "collectisub",
   "version": "0.0.1",
   "description": "Collective subtitling",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "live": "nodemon -e js,css index.js",
-    "serve": "node index.js",
+    "live": "nodemon -e js,css server.js",
+    "serve": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fiffu",

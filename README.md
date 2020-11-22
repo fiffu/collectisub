@@ -13,7 +13,7 @@ WIP: https://collectisub.herokuapp.com
 ## Install
 
     npm install
-    node index.js
+    node server.js
     npm run live   // auto-reloads Node for dev
 
 ## Deploy
