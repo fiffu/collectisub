@@ -23,7 +23,6 @@ const Editor = {
 
             lines.forEach((line, idx) => line.idx = idx);  // array idx per Dialogue obj
         }
-        console.log(lines);
 
         return {
             columns,
@@ -43,7 +42,6 @@ const Editor = {
                 .map(c => Number.parseInt(c, 16))  // back to int
                 .map(c => Math.trunc(c * 0.25 + 192))  // scale to 75~100% of rgb
                 .map(c => c.toString(16)).join('');  // back to hexcode
-            // console.log(`${str} -> #${colour}`);
             return `#${colour}`;
         }
     },
