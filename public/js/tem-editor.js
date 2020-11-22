@@ -2,7 +2,7 @@
  * Editor component
  */
 
-import SubLine from './sub-line.js';
+import SubsAss from './tem-subs-ass.js';
 
 const Editor = {
     name: 'editor',
@@ -19,9 +19,11 @@ const Editor = {
             };
             const evts = this.value.parsed.filter(s => s.section === 'Events')[0];
             lines = evts.body
-                .filter(e => e.key === 'Dialogue')
-                .map(e => e.value);
+                .filter(e => e.key === 'Dialogue').map(e => e.value);  // extract Dialogue
+
+            lines.forEach((line, idx) => line.idx = idx);  // array idx per Dialogue obj
         }
+        console.log(lines);
 
         return {
             columns,
@@ -30,6 +32,7 @@ const Editor = {
     },
 
     methods: {
+
         calculateColour(str) {
             const c = str.slice(0, 100) // slice here to prevent OOM from .repeat(6)
                 .split('').map(c => c.charCodeAt())  // array of charcode
@@ -46,28 +49,16 @@ const Editor = {
     },
 
     components: {
-        'sub-line': SubLine
+        'sub-line-ass': SubsAss
     },
 
     template: `
     <div class="editor">
         <h2 class="proj-name">{{ value.meta.filename }}</h2>
         <span class="proj-id">{{ value.meta.projId }}</span>
-        <table class="table subs-lines">
-            <thead style="background-color: #333388; color: #ffffff">
-                <tr>
-                    <th scope="col" v-for="(rw, col) in columns">{{ col }}</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                <tr v-for="line in lines" :style="{ 'background-color': calculateColour(line.Style) }">
-                    <td v-for="(rw, col) in columns" :class="{ 'col-8': rw === 'w' }">
-                        <span v-if="rw === 'r'">{{ line[col] }}</span>
-                        <input type="text" v-else v-model="line.Text" style="width: 100%" />
-                    </td>
-                </tr>
-            </tbody>
+        <sub-line-ass v-model="value" />
+
         </table>
     </div>
     `

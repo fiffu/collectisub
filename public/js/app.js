@@ -1,5 +1,5 @@
 import acceptedFormats from './accept-formats.js';
-import Editor from './editor.js';
+import Editor from './tem-editor.js';
 
 const Upload = {
     name: 'upload-modal',
@@ -89,7 +89,6 @@ const Upload = {
     </div></div>
     `,
 };
-
 
 const App = {
     name: 'app',

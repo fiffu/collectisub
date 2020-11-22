@@ -14,3 +14,15 @@
     font-style: italic;
     font-size: 0.9rem;
 }
+
+
+input.editable-sub {
+    background-color: rgb(255, 255, 255, 0.4);
+    border: 0px;
+    border-radius: 5px;
+    padding: 7px;
+}
+
+input.editable-sub:hover, input.editable-sub:focus {
+    background-color: white;
+}
