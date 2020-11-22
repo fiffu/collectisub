@@ -101,6 +101,10 @@ class PostgresDao {
             const timestamp = Date.now();
             await client.query('BEGIN');
             await client.query(
+                `INSERT INTO projects_meta(projId, filename, format) VALUES ($1, $2, $3)`,
+                [projId, filename, format]
+            )
+            await client.query(
                 `INSERT INTO projects_data(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
                 [projId, timestamp, parsed]
             );
@@ -108,10 +112,6 @@ class PostgresDao {
                 `INSERT INTO projects_originaldata(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
                 [projId, timestamp, parsed]
             );
-            await client.query(
-                `INSERT INTO projects_meta(projId, filename, format) VALUES ($1, $2, $3)`,
-                [projId, filename, format]
-            )
             await client.query('COMMIT');
 
         } catch (e) {
