@@ -47,20 +47,29 @@ function buildUpdateQuery(table, newValues, conditions) {
 
 class PostgresDao {
     constructor() {
-        const dbUri = process.env.DATABASE_URL;
-        if (!dbUri) {
+        this.uri = process.env.DATABASE_URL;
+        if (!this.uri) {
             throw new Error('DATABASE_URL not defined in environment');
         }
-        this.db = new Pool({ connectionString: dbUri, max: 15 });
+        this.db = new Pool({ connectionString: this.uri, max: 15 });
+
+        const errorFunc = (ex) => { throw ex };
+        this.db.query('SELECT 1;')
+            .then(_ => console.log('Database ready'))
+            .catch(errorFunc);
     }
 
-
     async init() {
-        fs.readFile(`${__dirname}/schema.sql`, async (err, sql) => {
-            if (err) return console.error(err);
+        const path = `${__dirname}/schema.sql`;
+        fs.readFile(path, async (err, res) => {
+            if (err || !res)
+                return console.error(err || `Empty file at ${path}`);
+
             try {
+                const sql = res.toString('utf8');
+                console.log(sql);
                 await this.db.query(sql);
-                console.log('initialized database');
+                console.log('Initialized database');
             } catch (ex) {
                 console.error(ex);
             }
@@ -87,26 +96,26 @@ class PostgresDao {
 
     async createProject(projId, filename, format, parsed) {
         const client = await this.db.connect();
-        const timestamp = Date.now();
         try {
-            const q = client.query;
-            await q('BEGIN');
-            await q(
+            const timestamp = Date.now();
+            await client.query('BEGIN');
+            await client.query(
                 `INSERT INTO projects_data(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
                 [projId, timestamp, parsed]
             );
-            await q(
+            await client.query(
                 `INSERT INTO projects_originaldata(projId, timestamp, parsed) VALUES ($1, $2, $3)`,
                 [projId, timestamp, parsed]
             );
-            await q(
+            await client.query(
                 `INSERT INTO projects_meta(projId, filename, format) VALUES ($1, $2, $3)`,
                 [projId, filename, format]
             )
-            await q('COMMIT');
+            await client.query('COMMIT');
 
         } catch (e) {
-            await q('ROLLBACK');
+            console.error(e);
+            await client.query('ROLLBACK');
             throw e;
 
         } finally {

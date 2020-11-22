@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS projects_meta;
 CREATE TABLE "projects_meta" (
     projId     text primary key,
     filename   text not null,
-    format     text not null,
+    format     text not null
 );
 
 DROP TABLE IF EXISTS projects_data;
